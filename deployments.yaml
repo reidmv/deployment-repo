@@ -1,0 +1,15 @@
+---
+# An enumerated list of SDLC tiers which a Puppet code deployment could be a
+# part of.
+deployment-tiers:
+  - production
+  - stage
+  - prestage
+  - test
+  - development
+
+# A directory searchpath for where to find yaml files defining Puppet code
+# deployments.
+deployment-searchpath:
+  - sdlc # Software Development Life Cycle
+  - wip  # Work-In-Progress

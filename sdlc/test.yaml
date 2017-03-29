@@ -1,0 +1,26 @@
+---
+tier: test
+core:
+  source: git://github.com/puppetlabs/control-repo.git
+  version: 12.1.0
+
+modules:
+  - puppetlabs/stdlib:
+      version: 4.16.0
+      type:    forge
+      source:  forgeapi.puppetlabs.com
+
+  - puppetlabs/apache:
+      version: 1.9.0
+      type:    forge
+      source:  forgeapi.puppetlabs.com
+
+  - lwf/remote_file:
+      version: 1.1.0
+      type:    forge
+      source:  forgeapi.puppetlabs.com
+
+  - tse/tse_admins:
+      version: c2efab9e
+      type:    git
+      source:  git@github.com:puppetlabs/tse-module-tse_admins.git
