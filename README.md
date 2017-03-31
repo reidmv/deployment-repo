@@ -41,3 +41,26 @@ This thought experiment is seeking a way to
 * Providing a versioned, single source of truth about what deployments exist and which versions of decoupled modules have been deployed to them AND
 * Providing a way to stage and make atomic deployments involving more than one decoupled module WITH
 * A SIMPLE git workflow
+
+## Hacky way to do this with today's tooling
+
+1. Set Puppet's environmentpath to `/etc/puppetlabs/code/deployments:/etc/puppetlabs/code/environments`
+2. Create a `/etc/puppetlabs/puppet/deployments.yaml` file with the content
+
+    ```yaml
+    ---
+    sources:
+      main:
+        remote: https://github.com/reidmv/deployment-repo.git
+    ```
+
+3. Init a new git repo into `/opt/puppetlabs/server/data/control-shim`
+4. Give the repo a single branch and call it `master`
+5. Create a Puppetfile in the repo with this content
+
+    ```ruby
+    ```
+
+6. Configure Code Manager to point at this "control-repo"
+7. Configure a webhook on the deployment-repo to kick Code Manager
+8. ~fin~

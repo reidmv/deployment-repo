@@ -1,5 +1,5 @@
 ---
-tier: prestage
+tier: integration
 core:
   source: git://github.com/puppetlabs/control-repo.git
   version: 12.1.0
