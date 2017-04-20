@@ -14,7 +14,7 @@ Each yaml file in this repo represents a deployment.
 
 To make a new deployment, make a new file.
 
-Pushing a change to the deployment-repo triggers a deployment of whatever is changing.
+Pushing a change to the deployment-repo is just like changing configuration on the Puppet master, and triggers updates to the code-dir as necessary to reflect the updated configuration.
 
 ## Mental Model
 
@@ -24,7 +24,7 @@ The model for how to think about deployments is broken down below in terms of _t
 
 #### Deployment
 
-A _deployment_ is a complete, referencable set of Puppet code. A deployment definition consists of:
+A _deployment_ is a deployed set of Puppet code. The long-form of _deployment_ is _Puppet code deployment_. A deployment definition consists of:
 
 * A name. The deployment will be created as a Puppet environment of this name.
 * The core Puppet code. A reference to a git repository and version. The contents of the repository should be laid out as a control-repo, or the root directory of a Puppet environment.
@@ -85,9 +85,28 @@ An example promotion might be promoting the bigfix module version 1.2.0 from tes
 
 Importantly, the rate at which changes are promoted for one object is independent of the promotion rate of all other objects.
 
+#### Promote (deployment)
+
+To facilitate faster or simpler workflows, it is possible to take a whole deployment (A) and replicate its core and modules to a deployment (B), fully replacing whatever core and module definitions (B) had previously. This constitutes promoting the deployment as a single unit of change.
+
 #### Compare (deployment)
 
 Because changes for core and modules are moving through the promotion pipeline (deployments) at independent rates, it is important to be able to see at a glance what the differences are between deployments. To see a list of what changes are in progress, and where each change is at in the deployment pipeline.
+
+### Where the term "Deployment" comes from
+
+The choice of the term "deployment" is inspired by the design of an old VMware product, vFabric Application Director. 
+
+* [vFabric Application Director web interface docs](http://pubs.vmware.com/appdirector-5.2/index.jsp#com.vmware.appdirector5.2.using.doc/GUID-DE9B73D5-E6BE-4BDD-8F19-57244B044F1F.html)
+* [vFabric Application Director managing deployments docs](http://pubs.vmware.com/appdirector-5.2/index.jsp#com.vmware.appdirector5.2.using.doc/GUID-F43C713F-F151-4D78-A1A3-2CC8740045C2.html)
+
+![vFabric Application Director](http://pubs.vmware.com/appdirector-5.2/topic/com.vmware.appdirector5.2.using.doc/GUID-1FCB49B4-5FF4-4F8E-9F78-C3279DA43347-low.png)
+
+The idea is that a deployment is just an instance of something. It is not unique. "This is my code deployment. There are many like it, but this one is mine."
+
+A deployment can have lifecycle actions applied to it, such as modules promoted to it, or updates made to it, and it has a history. But in the end it is easily replicable and could even be considered disposable, recreatable.
+
+A deployment is a named, parameterized instance of _something else_ (in this case Puppet code), includes lifecycle actions, and has a history.
 
 ## WHY?
 
