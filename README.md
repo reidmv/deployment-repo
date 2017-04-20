@@ -57,6 +57,10 @@ Deployments are all about making changes, or promoting change. The fact that a m
 
 The _core_ of a deployment is similar to a module in that it is an independently promotable unit of change. The core has a distinction though in that there may only be one core in a deployment.
 
+#### Code
+
+A particular definition of core and modules, when referred to as a whole, may be referred to as the code.
+
 ### Interesting Actions
 
 Basic CRUD actions can be implied based on the thing descriptions above. Here I'll describe some of actions most interesting from a workflow perspective, and why they're interesting.
@@ -85,9 +89,9 @@ An example promotion might be promoting the bigfix module version 1.2.0 from tes
 
 Importantly, the rate at which changes are promoted for one object is independent of the promotion rate of all other objects.
 
-#### Promote (deployment)
+#### Promote (code)
 
-To facilitate faster or simpler workflows, it is possible to take a whole deployment (A) and replicate its core and modules to a deployment (B), fully replacing whatever core and module definitions (B) had previously. This constitutes promoting the deployment as a single unit of change.
+To facilitate faster or simpler workflows, it is possible to take the code in a deployment (A) and replicate it to deployment (B), fully replacing whatever code definition (B) had previously. This constitutes promoting the code as a unit of change, rather than the core or a module.
 
 #### Compare (deployment)
 
