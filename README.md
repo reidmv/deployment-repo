@@ -1,24 +1,14 @@
-# Deployment Repo
+# Code Deployment Workflow
 
 This is a Puppet workflow thought experiment.
 
-What if branches didn't control deployments?
+What if Git branches didn't control deployment of Puppet code?
 
-What if instead, a repository exists that is ONLY about defining deployments of Puppet code? A deployment is roughly synonymous with a Puppet environment. A tier is roughly synonymous with a customer environment. Every deployment has a tier, and defines a collection of Puppet code and modules to deploy.
-
-The long-form of "tier" is Deployment Tier.
-
-There don't need to be multiple branches. A file can describe each deployment, and there can be multiple files. All the files exist in the master branch of the "deployment repo".
-
-Each yaml file in this repo represents a deployment. 
-
-To make a new deployment, make a new file.
-
-Pushing a change to the deployment-repo is just like changing configuration on the Puppet master, and triggers updates to the code-dir as necessary to reflect the updated configuration.
+Consider this idea instead. A version-centric (not necessarily git-centric) workflow exists that is ONLY about defining and working with deployments of Puppet code.
 
 ## Mental Model
 
-The model for how to think about deployments is broken down below in terms of _things_ and _actions_.
+The model for how to think about Puppet code deployments is broken down below in terms of _things_ and _actions_.
 
 ### Things
 
@@ -51,7 +41,15 @@ In practice it is expected that deployment tiers like "production", "uat", and "
 
 A _module_ is a Puppet module. However, in the context of a deployment a module is also an independently promotable unit of change.
 
-Deployments are all about making changes, or promoting change. The fact that a module is independently promotable is very important. It means module change promotion rates for modules are decoupled from each other. One module (A) may promote a change from "test" to "staging" once a week, while another module (B) pushes changes through from "test" to "staging" once a day. Changes made to module (B) do not stack up behind changes to module (A) in a single queue, nor does one change advancing past another require git wizardry to accomplish. Each module has its own linear change history and any version of that module may be promoted to any deployment at any time.
+Deployments are all about making changes, or promoting change. The fact that a module is independently promotable is very important. It means module change promotion rates for modules are decoupled from each other. One module (A) may promote a change from "test" to "staging" once a week, while another module (B) pushes changes through from "test" to "staging" once a day. Changes made to module (B) do not stack up behind changes to module (A) in a single queue, nor does one change advancing past another require git wizardry to accomplish. Each module has its own linear change history and any version of that module may be pushed or promoted to any deployment at any time.
+
+A list of modules is defined as part of a deployment and each module in that list has:
+
+* A name. The name of the module
+* A source. e.g. git://github.com/puppetlabs/puppetlabs-ntp.git
+* A version reference. Can be static (like a release version, sha, tag), or dynamic (like a branch)
+
+Note that because the version reference can be dynamic, it's possible for a deployment to be dynamic.
 
 #### Core
 
@@ -78,6 +76,12 @@ Create a new deployment based on an existing deployment as a template. This acti
 An update to a deployment is most likely to occur immediately after duplicating a deployment. The reason for this is that outside of that one use case, the promote action is is likely to be preferred over update in a workflow.
 
 Updating a deployment is literally just editing any part of its definition. Core, modules, deployment tier, or name.
+
+#### Refresh (deployment)
+
+Check all the dynamic modules and/or dynamic core in a deployment and if necessary, refresh the deployment on disk (the Puppet environment) with any changes.
+
+The deployment definition doesn't change in a refresh, but if there is new content in any of the dynamic references it has, that new content will be reflected in the deployment after a refresh.
 
 #### Promote (module or core)
 
@@ -131,3 +135,7 @@ This thought experiment is seeking a way to
 * Providing a versioned, single source of truth about what deployments exist and which versions of decoupled modules have been deployed to them AND
 * Providing a way to stage and make atomic deployments involving more than one decoupled module WITH
 * A SIMPLE git workflow
+
+## File-based Sample
+
+The rest of the files in this repo represent how the mental model above might look if it were implemented as a set of flat configuration files.
